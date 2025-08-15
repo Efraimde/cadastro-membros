@@ -1,19 +1,14 @@
 const { Low } = require('lowdb');
-const { JSONFile } = require('lowdb/node');
+const { JSONFileSync } = require('lowdb/node'); // versão síncrona
 const path = require('path');
 
 const file = path.join(__dirname, 'membros.json');
-const adapter = new JSONFile(file);
+const adapter = new JSONFileSync(file); // usa escrita síncrona
 
-// Passando dados padrão para evitar o erro
 const db = new Low(adapter, { membros: [] });
 
-async function initDB() {
-  await db.read();
-  db.data ||= { membros: [] }; // garante que sempre exista
-  await db.write();
-}
-
-initDB();
+// Inicializa dados padrão
+db.read();
+db.data ||= { membros: [] };
 
 module.exports = db;

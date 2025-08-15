@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const db = require('./db');
+require('dotenv').config(); // carregar variáveis de ambiente
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,7 +12,17 @@ app.use(express.json());
 const frontendDir = path.join(__dirname, '..', 'frontend');
 app.use(express.static(frontendDir));
 
-/* ========== ROTAS API ========== */
+/* ===== LOGIN ===== */
+app.post('/login', (req, res) => {
+  const { usuario, senha } = req.body;
+  if(usuario === process.env.ADMIN_USER && senha === process.env.ADMIN_PASS) {
+    res.json({ ok: true });
+  } else {
+    res.json({ ok: false });
+  }
+});
+
+/* ===== ROTAS API ===== */
 app.get('/api/membros', async (req,res) => {
   await db.read();
   res.json(db.data.membros.sort((a,b)=>b.id - a.id));
@@ -62,35 +73,20 @@ app.delete('/api/membros/:id', async (req,res) => {
   res.json({ok:true});
 });
 
-/* ====== STATUS PARA QR CODE (apenas mostra status) ====== */
+/* ===== STATUS PARA QR CODE ===== */
 app.get('/status/:id', async (req,res) => {
   await db.read();
   const membro = db.data.membros.find(m => m.id===Number(req.params.id));
-  if(!membro) {
-    return res.status(404).send(`
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <div style="font-family:Arial; padding:16px;">
-        <h2>Membro não encontrado</h2>
-        <p>ID: ${req.params.id}</p>
-      </div>
-    `);
-  }
+  if(!membro) return res.status(404).send(`<h2>Membro não encontrado</h2>`);
 
   const ativo = membro.status === 'ativo';
   const cor = ativo ? '#10B981' : '#EF4444';
   const txt = ativo ? 'ATIVO' : 'INATIVO';
 
   res.send(`
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <div style="font-family:Arial; padding:24px; max-width:480px; margin:auto; text-align:center;">
+    <div style="font-family:Arial; padding:24px; text-align:center;">
       <h2>${membro.nome}</h2>
-      <div style="
-        padding:16px; 
-        border-radius:12px; 
-        background:${cor}; 
-        color:white; 
-        font-size:22px; 
-        font-weight:bold;">
+      <div style="padding:16px; border-radius:12px; background:${cor}; color:white; font-size:22px; font-weight:bold;">
         ${txt}
       </div>
       <p style="color:#6B7280; font-size:12px; margin-top:16px;">
@@ -100,9 +96,10 @@ app.get('/status/:id', async (req,res) => {
   `);
 });
 
-// SPA fallback: redireciona para login.html
+// SPA fallback
 app.get(/^\/(?!api\/|status\/).*/, (req,res) => {
   res.sendFile(path.join(frontendDir,'login.html'));
 });
 
 app.listen(PORT, ()=>console.log(`Servidor rodando em http://localhost:${PORT}`));
+
