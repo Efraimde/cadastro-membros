@@ -1,0 +1,13 @@
+como acessar projeto membro. 
+1º cd C:\Users\User\cd projeto-membros
+
+npm install express lowdb nodemon ( a principio não usar ir direto para o nodemon) 
+
+2º npx nodemon backend/server.js
+
+o servidor ficara rodando direto em http://localhost:5000
+
+
+abir no https: http://localhost:5000/membros
+
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carteirinha do Membro</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+    .carteirinha { 
+      display: inline-block; 
+      border: 2px solid #333; 
+      border-radius: 12px; 
+      padding: 20px; 
+      max-width: 400px; 
+      margin-top: 20px; 
+      text-align: center; 
+    }
+    .status { padding: 10px; border-radius: 8px; color: white; font-weight: bold; margin-top: 10px; }
+    .ativo { background-color: #10B981; }
+    .inativo { background-color: #EF4444; }
+    #qrcode { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Carteirinha</h1>
+  <div id="carteirinha-container"></div>
+
+  <!-- Biblioteca QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // Pega o ID do membro da URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+      document.getElementById('carteirinha-container').innerHTML = '<p>Membro não informado.</p>';
+    } else {
+      fetch(`/status/${id}`)
+        .then(res => res.text())
+        .then(html => {
+          // Insere os dados do membro
+          const container = document.getElementById('carteirinha-container');
+          container.innerHTML = html;
+
+          // Cria QR Code apontando para a página de status do membro
+          const qrcodeDiv = document.createElement('div');
+          qrcodeDiv.id = 'qrcode';
+          container.appendChild(qrcodeDiv);
+
+          new QRCode(qrcodeDiv, {
+            text: window.location.origin + `/status/${id}`,
+            width: 150,
+            height: 150
+          });
+        })
+        .catch(err => {
+          document.getElementById('carteirinha-container').innerHTML = '<p>Erro ao carregar o membro.</p>';
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
+

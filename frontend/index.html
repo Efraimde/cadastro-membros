@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Membros</title>
+  <style>
+    * { box-sizing: border-box; margin:0; padding:0; font-family:Arial, sans-serif; }
+    body { background:#f3f4f6; color:#111827; padding:20px; }
+    h1 { text-align:center; margin-bottom:20px; color:#1f2937; }
+
+    form { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.1); max-width:500px; margin:0 auto 30px auto; }
+    form label { display:block; margin-bottom:6px; font-weight:bold; }
+    form input, form select { width:100%; padding:10px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; }
+    form button { width:100%; padding:12px; background:#3b82f6; color:#fff; font-weight:bold; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
+    form button:hover { background:#2563eb; }
+
+    table { width:100%; border-collapse:collapse; margin-top:20px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
+    th, td { padding:12px; text-align:left; vertical-align: middle; }
+    th { background:#3b82f6; color:#fff; }
+    tr:nth-child(even) { background:#f9fafb; }
+    tr:hover { background:#e0f2fe; }
+
+    .btn { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:bold; margin-right:5px; }
+    .btn-status { background:#10b981; color:#fff; }
+    .btn-status.inativo { background:#ef4444; }
+    .btn-carteirinha { background:#f59e0b; color:#fff; }
+    .btn-editar { background:#3b82f6; color:#fff; }
+    .btn-excluir { background:#ef4444; color:#fff; }
+    .btn:hover { opacity:0.85; }
+
+    .qrcode-container { margin-bottom:5px; }
+
+    /* Containers de login e app */
+    #loginContainer { display:flex; justify-content:center; align-items:center; height:100vh; }
+    #app { display:none; }
+    .erro { color:#ef4444; text-align:center; margin-bottom:10px; }
+    .mostrar-senha { display:flex; align-items:center; margin-bottom:15px; font-size:14px; cursor:pointer; }
+    .mostrar-senha input { margin-right:6px; }
+  </style>
+
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<!-- Login -->
+<div id="loginContainer">
+  <form id="loginForm">
+    <h2>Login Administrativo</h2>
+    <div class="erro" id="erro"></div>
+    
+    <label for="usuario">Usuário</label>
+    <input type="text" id="usuario" required>
+    
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" required>
+    
+    <div class="mostrar-senha">
+      <input type="checkbox" id="toggleSenha">
+      <label for="toggleSenha">Mostrar senha</label>
+    </div>
+    
+    <button type="submit">Entrar</button>
+  </form>
+</div>
+
+<!-- Aplicação -->
+<div id="app">
+  <div style="text-align:right; max-width:500px; margin:0 auto 10px auto;">
+    <button id="btnSair" class="btn btn-excluir">Sair</button>
+  </div>
+
+  <h1>Cadastro de Membros</h1>
+
+  <form id="form-membro">
+    <label for="nome">Nome</label>
+    <input type="text" id="nome" placeholder="Nome completo" required>
+
+    <label for="email">E-mail</label>
+    <input type="email" id="email" placeholder="email@exemplo.com" required>
+
+    <label for="rg">RG</label>
+    <input type="text" id="rg" placeholder="Digite o RG" required>
+
+    <label for="status">Status</label>
+    <select id="status">
+      <option value="ativo">Ativo</option>
+      <option value="inativo">Inativo</option>
+    </select>
+
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <table id="tabela-membros">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>RG</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Membros cadastrados aparecerão aqui -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "1234"; // Troque para algo seguro
+
+const loginContainer = document.getElementById('loginContainer');
+const app = document.getElementById('app');
+const formLogin = document.getElementById('loginForm');
+const erro = document.getElementById('erro');
+const senhaInput = document.getElementById('senha');
+const toggleSenha = document.getElementById('toggleSenha');
+const btnSair = document.getElementById('btnSair');
+
+// Mostrar senha
+toggleSenha.addEventListener('change', () => {
+  senhaInput.type = toggleSenha.checked ? 'text' : 'password';
+});
+
+// Login
+formLogin.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const usuario = document.getElementById('usuario').value;
+  const senha = senhaInput.value;
+
+  if(usuario === ADMIN_USER && senha === ADMIN_PASS) {
+    localStorage.setItem('logado', 'true');
+    loginContainer.style.display = 'none';
+    app.style.display = 'block';
+    listarMembros();
+  } else {
+    erro.textContent = "Usuário ou senha incorretos!";
+  }
+});
+
+// Logout
+btnSair.addEventListener('click', () => {
+  localStorage.removeItem('logado');
+  app.style.display = 'none';
+  loginContainer.style.display = 'flex';
+});
+
+// Verifica login ao carregar página
+if(localStorage.getItem('logado') === 'true') {
+  loginContainer.style.display = 'none';
+  app.style.display = 'block';
+}
+
+// Cadastro e gerenciamento de membros
+const form = document.getElementById('form-membro');
+const tabela = document.getElementById('tabela-membros').querySelector('tbody');
+
+async function listarMembros() {
+  const res = await fetch('/api/membros');
+  const membros = await res.json();
+  tabela.innerHTML = '';
+  membros.forEach(m => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${m.id}</td>
+      <td>${m.nome}</td>
+      <td>${m.email}</td>
+      <td>${m.rg}</td>
+      <td>
+        <button class="btn btn-status ${m.status==='inativo'?'inativo':''}" onclick="alterarStatus(${m.id})">
+          ${m.status.toUpperCase()}
+        </button>
+      </td>
+      <td>
+        <div class="qrcode-container" id="qrcode-${m.id}"></div>
+        <button class="btn btn-carteirinha" onclick="window.open('/status/${m.id}')">Carteirinha</button>
+        <button class="btn btn-editar" onclick="editarMembro(${m.id})">Editar</button>
+        <button class="btn btn-excluir" onclick="excluirMembro(${m.id})">Excluir</button>
+      </td>
+    `;
+    tabela.appendChild(tr);
+
+    // Gerar QR Code
+    const qrDiv = document.getElementById(`qrcode-${m.id}`);
+    qrDiv.innerHTML = '';
+    new QRCode(qrDiv, {
+      text: `${window.location.origin}/status/${m.id}`,
+      width: 64,
+      height: 64
+    });
+  });
+}
+
+async function cadastrarMembro(e) {
+  e.preventDefault();
+  const nome = document.getElementById('nome').value;
+  const email = document.getElementById('email').value;
+  const rg = document.getElementById('rg').value;
+  const status = document.getElementById('status').value;
+
+  await fetch('/api/membros', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json' },
+    body: JSON.stringify({ nome,email,rg,status })
+  });
+
+  form.reset();
+  listarMembros();
+}
+
+async function alterarStatus(id) {
+  const res = await fetch(`/api/membros/${id}`);
+  const membro = await res.json();
+  const novoStatus = membro.status==='ativo'?'inativo':'ativo';
+  await fetch(`/api/membros/${id}`, {
+    method:'PUT',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ status:novoStatus })
+  });
+  listarMembros();
+}
+
+async function excluirMembro(id) {
+  if(!confirm('Deseja realmente excluir este membro?')) return;
+  await fetch(`/api/membros/${id}`, { method:'DELETE' });
+  listarMembros();
+}
+
+async function editarMembro(id) {
+  const res = await fetch(`/api/membros/${id}`);
+  const membro = await res.json();
+
+  const nome = prompt('Nome:', membro.nome);
+  if(nome===null) return;
+  const email = prompt('E-mail:', membro.email);
+  if(email===null) return;
+  const rg = prompt('RG:', membro.rg);
+  if(rg===null) return;
+  const status = prompt('Status (ativo/inativo):', membro.status);
+  if(status===null) return;
+
+  await fetch(`/api/membros/${id}`, {
+    method:'PUT',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ nome,email,rg,status })
+  });
+
+  listarMembros();
+}
+
+form.addEventListener('submit', cadastrarMembro);
+</script>
+
+</body>
+</html>

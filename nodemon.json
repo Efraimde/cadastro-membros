@@ -1,0 +1,11 @@
+{
+  "watch": ["backend"],
+  "ext": "js,json",
+  "ignore": [
+    "node_modules",
+    "frontend",
+    "**/*.log",
+    "**/*.sqlite"
+  ],
+  "delay": "2500"
+}

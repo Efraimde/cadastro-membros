@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Administrativo</title>
+  <style>
+    body { display:flex; justify-content:center; align-items:center; height:100vh; background:#f3f4f6; font-family:Arial,sans-serif; }
+    form { background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); width:300px; }
+    h2 { text-align:center; margin-bottom:20px; }
+    label { display:block; margin-bottom:6px; font-weight:bold; }
+    input { width:100%; padding:10px; margin-bottom:10px; border:1px solid #d1d5db; border-radius:8px; }
+    button { width:100%; padding:12px; background:#3b82f6; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+    button:hover { background:#2563eb; }
+    .erro { color:#ef4444; text-align:center; margin-bottom:10px; }
+    .mostrar-senha { display:flex; align-items:center; margin-bottom:15px; font-size:14px; cursor:pointer; }
+    .mostrar-senha input { margin-right:6px; }
+  </style>
+</head>
+<body>
+
+<form id="loginForm">
+  <h2>Login Administrativo</h2>
+  <div class="erro" id="erro"></div>
+  
+  <label for="usuario">Usuário</label>
+  <input type="text" id="usuario" required>
+  
+  <label for="senha">Senha</label>
+  <input type="password" id="senha" required>
+  
+  <div class="mostrar-senha">
+    <input type="checkbox" id="toggleSenha">
+    <label for="toggleSenha">Mostrar senha</label>
+  </div>
+  
+  <button type="submit">Entrar</button>
+</form>
+
+<script>
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "1234"; // Troque para algo seguro
+
+const form = document.getElementById('loginForm');
+const erro = document.getElementById('erro');
+const senhaInput = document.getElementById('senha');
+const toggleSenha = document.getElementById('toggleSenha');
+
+toggleSenha.addEventListener('change', () => {
+  senhaInput.type = toggleSenha.checked ? 'text' : 'password';
+});
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const usuario = document.getElementById('usuario').value;
+  const senha = senhaInput.value;
+
+  if(usuario === ADMIN_USER && senha === ADMIN_PASS) {
+    localStorage.setItem('logado', 'true'); // Marca login
+    window.location.href = "index.html";
+  } else {
+    erro.textContent = "Usuário ou senha incorretos!";
+  }
+});
+</script>
+
+</body>
+</html>

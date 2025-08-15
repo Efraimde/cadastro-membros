@@ -1,0 +1,62 @@
+:root{
+  --bg:#0b1220;
+  --card:#121a2b;
+  --muted:#95a1b1;
+  --text:#e8eef7;
+  --primary:#2563eb;
+  --green:#10B981;
+  --red:#EF4444;
+  --border:#263043;
+}
+
+*{ box-sizing:border-box; }
+body{
+  margin:0; font-family:system-ui,Segoe UI,Roboto,Arial;
+  background:var(--bg); color:var(--text);
+}
+.container{ max-width:980px; margin:24px auto; padding:0 16px; }
+h1,h2{ margin:8px 0 16px; }
+a{ color:#93c5fd; text-decoration:none; }
+.link-voltar{ display:inline-block; margin-bottom:12px; }
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px; padding:16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+.grid{
+  display:grid; gap:12px;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+}
+label{ display:block; font-size:14px; color:var(--muted); margin-bottom:6px; }
+input,select{
+  width:100%; padding:10px 12px; border-radius:10px;
+  background:#0f1626; border:1px solid var(--border); color:var(--text);
+}
+.btn{
+  margin-top:12px; padding:10px 16px; border:0; border-radius:10px;
+  background:var(--primary); color:white; font-weight:600; cursor:pointer;
+}
+.btn.small{ padding:6px 10px; font-size:12px; }
+.btn.ghost{ background:transparent; border:1px solid var(--border); color:#cbd5e1; }
+
+.table-wrap{ overflow:auto; border:1px solid var(--border); border-radius:12px; }
+table{ width:100%; border-collapse:collapse; }
+th,td{ padding:10px; border-bottom:1px solid var(--border); text-align:left; font-size:14px; }
+th{ color:#c7d2fe; background:#0f1626; position:sticky; top:0; }
+
+.badge{
+  padding:2px 8px; border-radius:999px; font-weight:700; font-size:12px;
+}
+.badge.ativo{ background:rgba(16,185,129,.15); color:var(--green); border:1px solid rgba(16,185,129,.35);}
+.badge.inativo{ background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.35);}
+
+.actions{ display:flex; gap:6px; flex-wrap:wrap; }
+
+.card-carteira{
+  display:flex; gap:16px; align-items:flex-start; justify-content:space-between;
+}
+.card-info .linha{ margin-bottom:8px; }
+.card-qr{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+.hint{ color:var(--muted); }
