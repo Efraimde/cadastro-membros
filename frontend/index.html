@@ -29,7 +29,7 @@ tr:hover { background:#e0f2fe; }
 .btn-excluir { background:#ef4444; color:#fff; }
 .btn:hover { opacity:0.85; }
 
-.qrcode-container { margin-bottom:5px; }
+.qrcode-container { margin-bottom:5px; display:flex; flex-direction:column; align-items:center; }
 
 /* Containers de login e app */
 #loginContainer { display:flex; justify-content:center; align-items:center; height:100vh; }
@@ -186,7 +186,28 @@ async function listarMembros() {
       </td>
     `;
     tabela.appendChild(tr);
-    new QRCode(document.getElementById(`qrcode-${m.id}`), { text:`${window.location.origin}/status/${m.id}`, width:64, height:64 });
+
+    // QR Code
+    const qrcodeDiv = document.getElementById(`qrcode-${m.id}`);
+    const qr = new QRCode(qrcodeDiv, { text:`${window.location.origin}/status/${m.id}`, width:64, height:64 });
+
+    // Botão de download do QR
+    const btnDownload = document.createElement('button');
+    btnDownload.textContent = 'Download QR';
+    btnDownload.className = 'btn btn-carteirinha';
+    btnDownload.style.marginTop = '5px';
+    btnDownload.onclick = () => {
+      const img = qrcodeDiv.querySelector('img') || qrcodeDiv.querySelector('canvas');
+      let url;
+      if(img.tagName === 'IMG') url = img.src;
+      else url = img.toDataURL('image/png');
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `QR_${m.nome.replace(/\s/g,'_')}.png`;
+      a.click();
+    };
+    qrcodeDiv.appendChild(btnDownload);
   });
 }
 
