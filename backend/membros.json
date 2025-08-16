@@ -5,16 +5,24 @@
       "nome": "EFRAIM DE OLIVEIRA MOREIRA",
       "email": "efraimoliveira10@gmail.com",
       "rg": "41323154543",
-      "status": "inativo",
-      "created_at": "15/08/2025, 18:25:49"
+      "status": "ativo",
+      "created_at": "16/08/2025, 17:07:00"
     },
     {
       "id": 2,
-      "nome": "jonas",
+      "nome": "maria joaquina  de rel juoa",
       "email": "efraimoliveira10@gmail.com",
       "rg": "41323154543",
       "status": "ativo",
-      "created_at": "15/08/2025, 18:49:01"
+      "created_at": "16/08/2025, 17:06:58"
+    },
+    {
+      "id": 3,
+      "nome": "Luiz  de souza",
+      "email": "efraimoliveira10@gmail.com",
+      "rg": "182827",
+      "status": "ativo",
+      "created_at": "16/08/2025, 17:07:34"
     }
   ]
 }

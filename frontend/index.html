@@ -9,19 +9,45 @@
 body { background:#f3f4f6; color:#111827; padding:20px; }
 h1 { text-align:center; margin-bottom:20px; color:#1f2937; }
 
-form { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.1); max-width:500px; margin:0 auto 30px auto; }
-form label { display:block; margin-bottom:6px; font-weight:bold; }
-form input, form select { width:100%; padding:10px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; }
-form button { width:100%; padding:12px; background:#3b82f6; color:#fff; font-weight:bold; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
+.container { max-width:1100px; margin:0 auto; }
+.card {
+  background:#fff; padding:20px; border-radius:12px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1); margin-bottom:20px;
+}
+
+#loginContainer { display:flex; justify-content:center; align-items:center; height:100vh; }
+#loginForm { width:100%; max-width:400px; }
+#loginForm h2 { text-align:center; margin-bottom:15px; color:#1f2937; }
+
+form label { margin-bottom:4px; font-weight:bold; font-size:13px; }
+form input, form select {
+  width:100%; padding:6px; margin-bottom:8px;
+  border:1px solid #d1d5db; border-radius:6px; font-size:13px;
+}
+form button {
+  width:100%; padding:10px; background:#3b82f6; color:#fff;
+  font-weight:bold; border:none; border-radius:6px; cursor:pointer; transition:0.3s;
+}
 form button:hover { background:#2563eb; }
 
-table { width:100%; border-collapse:collapse; margin-top:20px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
-th, td { padding:12px; text-align:left; vertical-align: middle; }
+.form-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+.form-item { display:flex; flex-direction:column; }
+.form-full { grid-column: span 2; }
+
+.table-container { overflow-x:auto; }
+table {
+  width:100%; border-collapse:collapse; background:#fff;
+  border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.1);
+}
+th, td { padding:6px 8px; text-align:left; vertical-align:middle; font-size:13px; }
 th { background:#3b82f6; color:#fff; }
 tr:nth-child(even) { background:#f9fafb; }
 tr:hover { background:#e0f2fe; }
 
-.btn { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:bold; margin-right:5px; }
+/* Botões */
+.btn { padding:4px 8px; border:none; border-radius:6px;
+  cursor:pointer; font-size:12px; font-weight:bold; margin:2px; white-space:nowrap;
+}
 .btn-status { background:#10b981; color:#fff; }
 .btn-status.inativo { background:#ef4444; }
 .btn-carteirinha { background:#f59e0b; color:#fff; }
@@ -29,82 +55,112 @@ tr:hover { background:#e0f2fe; }
 .btn-excluir { background:#ef4444; color:#fff; }
 .btn:hover { opacity:0.85; }
 
-.qrcode-container { margin-bottom:5px; display:flex; flex-direction:column; align-items:center; }
+/* QR + ações na mesma linha */
+.acoes-container {
+  display:flex; align-items:center; flex-wrap:wrap; gap:4px;
+}
+.acoes-container img, .acoes-container canvas { border:1px solid #ddd; border-radius:6px; }
 
-/* Containers de login e app */
-#loginContainer { display:flex; justify-content:center; align-items:center; height:100vh; }
-#app { display:none; }
-.erro { color:#ef4444; text-align:center; margin-bottom:10px; }
-.mostrar-senha { display:flex; align-items:center; margin-bottom:15px; font-size:14px; cursor:pointer; }
-.mostrar-senha input { margin-right:6px; }
+/* RESPONSIVO CELULAR */
+@media(max-width:700px){
+  .form-grid { grid-template-columns:1fr; }
+  .form-full { grid-column: span 1; }
+
+  th, td { font-size:12px; padding:4px 6px; }
+
+  .acoes-container {
+    flex-wrap: nowrap;
+    gap:2px;
+    overflow-x:auto;
+  }
+  .acoes-container button {
+    font-size:10px;
+    padding:2px 4px;
+  }
+  .acoes-container img, .acoes-container canvas {
+    width:32px !important;
+    height:32px !important;
+  }
+
+  .table-container {
+    overflow-x:auto;
+  }
+}
 </style>
 
-<!-- QRCode.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
 <!-- Login -->
 <div id="loginContainer">
-  <form id="loginForm">
+  <form id="loginForm" class="card">
     <h2>Login Administrativo</h2>
     <div class="erro" id="erro"></div>
-    
     <label for="usuario">Usuário</label>
     <input type="text" id="usuario" required>
-    
     <label for="senha">Senha</label>
     <input type="password" id="senha" required>
-    
     <div class="mostrar-senha">
       <input type="checkbox" id="toggleSenha">
       <label for="toggleSenha">Mostrar senha</label>
     </div>
-    
     <button type="submit">Entrar</button>
   </form>
 </div>
 
 <!-- Aplicação -->
-<div id="app">
-  <div style="text-align:right; max-width:500px; margin:0 auto 10px auto;">
-    <button id="btnSair" class="btn btn-excluir">Sair</button>
+<div id="app" style="display:none;">
+  <div class="container">
+    <div style="text-align:right; margin-bottom:10px;">
+      <button id="btnSair" class="btn btn-excluir">Sair</button>
+    </div>
+
+    <h1>Cadastro de Membros</h1>
+
+    <!-- Formulário -->
+    <form id="form-membro" class="card form-grid">
+      <div class="form-item">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" placeholder="Nome completo" required>
+      </div>
+      <div class="form-item">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="email@exemplo.com" required>
+      </div>
+      <div class="form-item">
+        <label for="rg">RG</label>
+        <input type="text" id="rg" placeholder="Digite o RG" required>
+      </div>
+      <div class="form-item">
+        <label for="status">Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+      <div class="form-full">
+        <button type="submit">Cadastrar</button>
+      </div>
+    </form>
+
+    <!-- Tabela -->
+    <div class="card table-container">
+      <table id="tabela-membros">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>RG</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
-
-  <h1>Cadastro de Membros</h1>
-
-  <form id="form-membro">
-    <label for="nome">Nome</label>
-    <input type="text" id="nome" placeholder="Nome completo" required>
-
-    <label for="email">E-mail</label>
-    <input type="email" id="email" placeholder="email@exemplo.com" required>
-
-    <label for="rg">RG</label>
-    <input type="text" id="rg" placeholder="Digite o RG" required>
-
-    <label for="status">Status</label>
-    <select id="status">
-      <option value="ativo">Ativo</option>
-      <option value="inativo">Inativo</option>
-    </select>
-
-    <button type="submit">Cadastrar</button>
-  </form>
-
-  <table id="tabela-membros">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>E-mail</th>
-        <th>RG</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
 </div>
 
 <script>
@@ -116,12 +172,10 @@ const senhaInput = document.getElementById('senha');
 const toggleSenha = document.getElementById('toggleSenha');
 const btnSair = document.getElementById('btnSair');
 
-// Mostrar senha
 toggleSenha.addEventListener('change', () => {
   senhaInput.type = toggleSenha.checked ? 'text' : 'password';
 });
 
-// Login via backend
 formLogin.addEventListener('submit', async (e) => {
   e.preventDefault();
   const usuario = document.getElementById('usuario').value;
@@ -144,21 +198,18 @@ formLogin.addEventListener('submit', async (e) => {
   }
 });
 
-// Logout
 btnSair.addEventListener('click', () => {
   localStorage.removeItem('logado');
   app.style.display = 'none';
   loginContainer.style.display = 'flex';
 });
 
-// Verifica login ao carregar página
 if(localStorage.getItem('logado') === 'true') {
   loginContainer.style.display='none';
   app.style.display='block';
   listarMembros();
 }
 
-// Cadastro e gerenciamento de membros
 const form = document.getElementById('form-membro');
 const tabela = document.getElementById('tabela-membros').querySelector('tbody');
 
@@ -179,36 +230,31 @@ async function listarMembros() {
         </button>
       </td>
       <td>
-        <div class="qrcode-container" id="qrcode-${m.id}"></div>
-        <button class="btn btn-carteirinha" onclick="window.open('/status/${m.id}')">Carteirinha</button>
-        <button class="btn btn-editar" onclick="editarMembro(${m.id})">Editar</button>
-        <button class="btn btn-excluir" onclick="excluirMembro(${m.id})">Excluir</button>
+        <div class="acoes-container" id="acoes-${m.id}">
+          <div id="qrcode-${m.id}"></div>
+          <button class="btn btn-carteirinha" title="Carteirinha" onclick="window.open('/status/${m.id}')">📇</button>
+          <button class="btn btn-editar" title="Editar" onclick="editarMembro(${m.id})">✏️</button>
+          <button class="btn btn-excluir" title="Excluir" onclick="excluirMembro(${m.id})">🗑️</button>
+          <button class="btn btn-carteirinha" title="Download QR" onclick="baixarQR(${m.id}, '${m.nome}')">⬇️</button>
+        </div>
       </td>
     `;
     tabela.appendChild(tr);
 
-    // QR Code
     const qrcodeDiv = document.getElementById(`qrcode-${m.id}`);
-    const qr = new QRCode(qrcodeDiv, { text:`${window.location.origin}/status/${m.id}`, width:64, height:64 });
-
-    // Botão de download do QR
-    const btnDownload = document.createElement('button');
-    btnDownload.textContent = 'Download QR';
-    btnDownload.className = 'btn btn-carteirinha';
-    btnDownload.style.marginTop = '5px';
-    btnDownload.onclick = () => {
-      const img = qrcodeDiv.querySelector('img') || qrcodeDiv.querySelector('canvas');
-      let url;
-      if(img.tagName === 'IMG') url = img.src;
-      else url = img.toDataURL('image/png');
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `QR_${m.nome.replace(/\s/g,'_')}.png`;
-      a.click();
-    };
-    qrcodeDiv.appendChild(btnDownload);
+    let qrcodeSize = window.innerWidth <= 700 ? 32 : 48;
+    new QRCode(qrcodeDiv, { text:`${window.location.origin}/status/${m.id}`, width:qrcodeSize, height:qrcodeSize });
   });
+}
+
+function baixarQR(id, nome) {
+  const qrcodeDiv = document.getElementById(`qrcode-${id}`);
+  const img = qrcodeDiv.querySelector('img') || qrcodeDiv.querySelector('canvas');
+  let url = img.tagName === 'IMG' ? img.src : img.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `QR_${nome.replace(/\s/g,'_')}.png`;
+  a.click();
 }
 
 async function cadastrarMembro(e) {
@@ -268,6 +314,5 @@ async function editarMembro(id) {
 
 form.addEventListener('submit', cadastrarMembro);
 </script>
-
 </body>
 </html>
