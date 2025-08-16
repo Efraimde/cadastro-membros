@@ -2,27 +2,19 @@
   "membros": [
     {
       "id": 1,
-      "nome": "josue",
+      "nome": "EFRAIM DE OLIVEIRA MOREIRA",
       "email": "efraimoliveira10@gmail.com",
       "rg": "41323154543",
-      "status": "ativo",
-      "created_at": "14/08/2025, 20:05:19"
+      "status": "inativo",
+      "created_at": "15/08/2025, 18:25:49"
     },
     {
       "id": 2,
-      "nome": "EFRAIM DE OLIVEIRA MOREIRA",
+      "nome": "jonas",
       "email": "efraimoliveira10@gmail.com",
-      "rg": "15345346547647657",
+      "rg": "41323154543",
       "status": "ativo",
-      "created_at": "14/08/2025, 20:06:20"
-    },
-    {
-      "id": 3,
-      "nome": "Elias ",
-      "email": "email@exemplo.com",
-      "rg": "000000",
-      "status": "inativo",
-      "created_at": "14/08/2025, 20:41:07"
+      "created_at": "15/08/2025, 18:49:01"
     }
   ]
 }
