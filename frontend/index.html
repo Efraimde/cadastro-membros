@@ -10,24 +10,15 @@ body { background:#f3f4f6; color:#111827; padding:20px; }
 h1 { text-align:center; margin-bottom:20px; color:#1f2937; }
 
 .container { max-width:1100px; margin:0 auto; }
-.card {
-  background:#fff; padding:20px; border-radius:12px;
-  box-shadow:0 4px 6px rgba(0,0,0,0.1); margin-bottom:20px;
-}
+.card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.1); margin-bottom:20px; }
 
 #loginContainer { display:flex; justify-content:center; align-items:center; height:100vh; }
 #loginForm { width:100%; max-width:400px; }
 #loginForm h2 { text-align:center; margin-bottom:15px; color:#1f2937; }
 
 form label { margin-bottom:4px; font-weight:bold; font-size:13px; }
-form input, form select {
-  width:100%; padding:6px; margin-bottom:8px;
-  border:1px solid #d1d5db; border-radius:6px; font-size:13px;
-}
-form button {
-  width:100%; padding:10px; background:#3b82f6; color:#fff;
-  font-weight:bold; border:none; border-radius:6px; cursor:pointer; transition:0.3s;
-}
+form input, form select { width:100%; padding:6px; margin-bottom:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px; }
+form button { width:100%; padding:10px; background:#3b82f6; color:#fff; font-weight:bold; border:none; border-radius:6px; cursor:pointer; transition:0.3s; }
 form button:hover { background:#2563eb; }
 
 .form-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
@@ -35,19 +26,14 @@ form button:hover { background:#2563eb; }
 .form-full { grid-column: span 2; }
 
 .table-container { overflow-x:auto; }
-table {
-  width:100%; border-collapse:collapse; background:#fff;
-  border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.1);
-}
+table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
 th, td { padding:6px 8px; text-align:left; vertical-align:middle; font-size:13px; }
 th { background:#3b82f6; color:#fff; }
 tr:nth-child(even) { background:#f9fafb; }
 tr:hover { background:#e0f2fe; }
 
 /* Botões */
-.btn { padding:4px 8px; border:none; border-radius:6px;
-  cursor:pointer; font-size:12px; font-weight:bold; margin:2px; white-space:nowrap;
-}
+.btn { padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:bold; margin:2px; white-space:nowrap; }
 .btn-status { background:#10b981; color:#fff; }
 .btn-status.inativo { background:#ef4444; }
 .btn-carteirinha { background:#f59e0b; color:#fff; }
@@ -56,35 +42,18 @@ tr:hover { background:#e0f2fe; }
 .btn:hover { opacity:0.85; }
 
 /* QR + ações na mesma linha */
-.acoes-container {
-  display:flex; align-items:center; flex-wrap:wrap; gap:4px;
-}
+.acoes-container { display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
 .acoes-container img, .acoes-container canvas { border:1px solid #ddd; border-radius:6px; }
 
 /* RESPONSIVO CELULAR */
 @media(max-width:700px){
   .form-grid { grid-template-columns:1fr; }
   .form-full { grid-column: span 1; }
-
   th, td { font-size:12px; padding:4px 6px; }
-
-  .acoes-container {
-    flex-wrap: nowrap;
-    gap:2px;
-    overflow-x:auto;
-  }
-  .acoes-container button {
-    font-size:10px;
-    padding:2px 4px;
-  }
-  .acoes-container img, .acoes-container canvas {
-    width:32px !important;
-    height:32px !important;
-  }
-
-  .table-container {
-    overflow-x:auto;
-  }
+  .acoes-container { flex-wrap: nowrap; gap:2px; overflow-x:auto; }
+  .acoes-container button { font-size:10px; padding:2px 4px; }
+  .acoes-container img, .acoes-container canvas { width:32px !important; height:32px !important; }
+  .table-container { overflow-x:auto; }
 }
 </style>
 
@@ -242,8 +211,15 @@ async function listarMembros() {
     tabela.appendChild(tr);
 
     const qrcodeDiv = document.getElementById(`qrcode-${m.id}`);
-    let qrcodeSize = window.innerWidth <= 700 ? 32 : 48;
-    new QRCode(qrcodeDiv, { text:`${window.location.origin}/status/${m.id}`, width:qrcodeSize, height:qrcodeSize });
+    let qrcodeSize = window.innerWidth <= 700 ? 32 : 48; // pequeno e legível
+    new QRCode(qrcodeDiv, { 
+      text:`${window.location.origin}/status/${m.id}`, 
+      width:qrcodeSize, 
+      height:qrcodeSize, 
+      colorDark:"#000000", 
+      colorLight:"#ffffff", 
+      correctLevel:QRCode.CorrectLevel.H 
+    });
   });
 }
 
