@@ -39,9 +39,43 @@
     .btn-editar { background:#3b82f6; color:#fff; }
     .btn-excluir { background:#ef4444; color:#fff; }
     .btn:hover { opacity:0.85; }
+
     /* QR + ações na mesma linha */
-    .acoes-container { display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
-    .acoes-container img { border:1px solid #ddd; border-radius:6px; }
+    .acoes-container { 
+      display:flex; 
+      align-items:center; 
+      flex-wrap:wrap; 
+      gap:6px; 
+    }
+    .acoes-container img, 
+    .acoes-container canvas { 
+      border:1px solid #ddd; 
+      border-radius:6px; 
+      width:80px; 
+      height:80px; 
+    }
+
+    /* Responsividade */
+    @media(max-width:700px){
+      table { font-size:12px; }
+      th, td { padding:8px; }
+      
+      .acoes-container { 
+        flex-wrap:nowrap; 
+        overflow-x:auto; 
+        padding:4px 0; 
+      }
+      .acoes-container .btn { 
+        flex:0 0 auto; 
+        font-size:11px; 
+        padding:5px 8px; 
+      }
+      .acoes-container img, 
+      .acoes-container canvas { 
+        width:50px; 
+        height:50px; 
+      }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
