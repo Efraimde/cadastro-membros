@@ -11,14 +11,3 @@ o servidor ficara rodando direto em http://localhost:5000
 abir no https: http://localhost:5000/membros
 
 
-chat a parte ali do cadastro 
-ficou ótima, a parte da tabela 
-acho que ainda esta desorganizada 
-por exemplo a altura pode diminuir  a parte das ações
- também precisa ser resolvido 
-ou seja o qr code gerado pode ficar  extamente 
-em abaixo do nome açoes, ao 
-lado botão carteirina, editar, excluir , etc
-conforme já é a logica,  e entre a formulario 
-e a tabela ter o botao baixar qr code como vc 
-fez no mockup. vc quer que te envio o codigo pra nao perdermos a logica?
